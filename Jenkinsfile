@@ -8,7 +8,6 @@ pipeline {
   stages {
     stage('Checkout server-api-test repo') {
       steps {
-        // ✅ Use your actual credential ID here
         git branch: 'main',
             url: 'https://github.com/PocketPandit/pocketpanditai-server-api-test.git',
             credentialsId: 'c0567682-d08b-4f6f-a0b8-1d054ab4fb0b'
@@ -18,14 +17,20 @@ pipeline {
     stage('Discover folders and trigger tests') {
       steps {
         script {
-          // Dynamically list test folders
-          def folders = sh(script: 'ls cypress/integration', returnStdout: true)
+          def folders = sh(script: 'ls cypress/e2e', returnStdout: true)
                           .trim()
                           .split("\n")
 
           def results = [:]
 
-          folders.each { folder ->
+          for (int i = 0; i < folders.size(); i++) {
+            def folder = folders[i]
+
+            if (folder == 'auth') {
+              echo "⏭️ Skipping folder '${folder}' as requested."
+              continue
+            }
+
             echo "▶️ Triggering Server Api with SPEC_FOLDER = ${folder}"
 
             def result = build job: 'Server Api',

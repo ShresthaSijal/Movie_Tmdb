@@ -15,9 +15,9 @@ class HomePage extends StatelessWidget {
       length: 3,
       child: Scaffold(
         appBar: AppBar(
-          toolbarHeight: 100,
+          toolbarHeight: 110,
           flexibleSpace: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 12),
             child: Center(
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,

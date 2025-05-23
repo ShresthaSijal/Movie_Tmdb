@@ -1,26 +1,13 @@
 pipeline {
   agent any
 
+  // 🟢 Trigger this pipeline from GitHub webhook
   triggers {
-    // 🟢 Trigger this job automatically when there's a Git push to server-api repo
-    githubPush()  // Or use pollSCM('H/5 * * * *') if webhooks aren’t configured
-  }
-
-  environment {
-    GIT_REPO = 'https://github.com/ShresthaSijal/Movie_Tmdb.git'  // 🔁 Replace this with your actual repo
-    BRANCH = 'main'
+    githubPush()
   }
 
   stages {
-    stage('Checkout Server API Repo') {
-      steps {
-        // Not strictly needed for logic, but good for visibility/logs
-        git branch: "${BRANCH}", url: "${GIT_REPO}"
-        echo "Checked out latest commit from ${BRANCH}"
-      }
-    }
-
-    stage('Trigger Tests for All Folders') {
+    stage('Run Cypress Tests for All Folders') {
       steps {
         script {
           def folders = [
@@ -44,8 +31,8 @@ pipeline {
           def results = [:]
 
           folders.each { folder ->
-            echo "➡️ Triggering Server Api with SPEC_FOLDER = '${folder}'"
-            def result = build job: 'Server Api',  // 🔁 Must match exact freestyle job name
+            echo "▶️ Triggering Server Api with SPEC_FOLDER = ${folder}"
+            def result = build job: 'Server Api',
               parameters: [string(name: 'SPEC_FOLDER', value: folder)],
               propagate: false,
               wait: true
@@ -53,16 +40,13 @@ pipeline {
             results[folder] = result.result
           }
 
-          echo "\n🧾 ---- Cypress Test Summary ----"
+          echo "\n📋 Test Summary:"
           results.each { folder, status ->
             echo "${folder.padRight(25)} : ${status}"
           }
 
           if (results.values().any { it != 'SUCCESS' }) {
-            echo "\n⚠️ Some tests failed or were unstable."
             currentBuild.result = 'UNSTABLE'
-          } else {
-            echo "\n✅ All tests passed successfully."
           }
         }
       }

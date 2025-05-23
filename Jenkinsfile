@@ -13,7 +13,19 @@ pipeline {
           def folders = [
             'banner',
             'birth_profile',
-            'country'
+            'country',
+            'currency_bills',
+            'faq',
+            'my',
+            'notification_subscribers',
+            'notification_subscriptions',
+            'permission',
+            'preferences',
+            'products',
+            'redeem_code',
+            'testimonials',
+            'users',
+            'wallet'
           ]
 
           def results = [:]

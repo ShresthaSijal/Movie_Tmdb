@@ -39,7 +39,7 @@ class HomePage extends StatelessWidget {
           ),
           bottom: TabBar(tabs: [
             Tab(
-              text: 'Popular',
+              text: 'Most Popular',
             ),
             Tab(
               text: 'Top Rated',

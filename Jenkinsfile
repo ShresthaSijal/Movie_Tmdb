@@ -1,33 +1,21 @@
 pipeline {
   agent any
 
-  // 🟢 Trigger this pipeline from GitHub webhook
   triggers {
     githubPush()
   }
 
   stages {
-    stage('Run Cypress Tests for All Folders') {
+    stage('Checkout Test Repo') {
+      steps {
+        git branch: 'main', url: 'https://github.com/PocketPandit/pocketpanditai-server-api-test.git'
+      }
+    }
+
+    stage('Trigger Server Api Tests') {
       steps {
         script {
-          def folders = [
-            'banner',
-            'birth_profile',
-            'country',
-            'currency_bills',
-            'faq',
-            'my',
-            'notification_subscribers',
-            'notification_subscriptions',
-            'permission',
-            'preferences',
-            'products',
-            'redeem_code',
-            'testimonials',
-            'users',
-            'wallet'
-          ]
-
+          def folders = sh(script: 'ls cypress/e2e', returnStdout: true).trim().split("\n")
           def results = [:]
 
           folders.each { folder ->

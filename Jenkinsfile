@@ -5,6 +5,10 @@ pipeline {
     githubPush()
   }
 
+  environment {
+    EMAIL_RECIPIENTS = 'shresthasijal9@gmail.com'  // change to your email(s)
+  }
+
   stages {
     stage('Checkout server-api-test repo') {
       steps {
@@ -22,6 +26,7 @@ pipeline {
                           .split("\n")
 
           def results = [:]
+          def summary = "\n📋 Cypress Test Summary:\n"
 
           for (int i = 0; i < folders.size(); i++) {
             def folder = folders[i]
@@ -39,12 +44,10 @@ pipeline {
               wait: true
 
             results[folder] = result.result
+            summary += "${folder.padRight(25)} : ${result.result}\n"
           }
 
-          echo "\n📋 Cypress Test Summary:"
-          results.each { folder, status ->
-            echo "${folder.padRight(25)} : ${status}"
-          }
+          echo summary
 
           if (results.values().any { it != 'SUCCESS' }) {
             echo "\n⚠️ One or more test runs failed or were unstable."
@@ -52,6 +55,23 @@ pipeline {
           } else {
             echo "\n✅ All test runs succeeded."
           }
+
+          // Send the summary email
+          emailext (
+            subject: "[Cypress Report] Server API Test Run Summary: ${currentBuild.currentResult}",
+            body: """Hello,
+
+Here is the summary of your Cypress tests:
+
+${summary}
+
+View full details at: ${env.BUILD_URL}
+
+Regards,
+Jenkins
+""",
+            to: "${EMAIL_RECIPIENTS}"
+          )
         }
       }
     }

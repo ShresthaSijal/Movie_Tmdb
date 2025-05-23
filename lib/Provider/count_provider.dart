@@ -5,7 +5,7 @@ final change = ChangeNotifierProvider((ref) => Countchanger());
 final state = StateProvider((ref) => 0);
 
 class Countchanger extends ChangeNotifier {
-  int number = 0;
+  int number = 3;
   void addNum() {
     number++;
     notifyListeners();

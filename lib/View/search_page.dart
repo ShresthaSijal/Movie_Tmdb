@@ -44,8 +44,8 @@ class SearchPage extends StatelessWidget {
                                   gridDelegate:
                                       SliverGridDelegateWithFixedCrossAxisCount(
                                           crossAxisCount: 3,
-                                          crossAxisSpacing: 10,
-                                          mainAxisSpacing: 10,
+                                          crossAxisSpacing: 12,
+                                          mainAxisSpacing: 12,
                                           childAspectRatio: 2 / 3),
                                   itemBuilder: (context, index) {
                                     final movie = movieState.movies[index];

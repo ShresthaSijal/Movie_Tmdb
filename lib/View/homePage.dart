@@ -42,7 +42,7 @@ class HomePage extends StatelessWidget {
               text: 'Most Popular',
             ),
             Tab(
-              text: 'Top Rated',
+              text: 'High Rated',
             ),
             Tab(
               text: 'Upcoming',

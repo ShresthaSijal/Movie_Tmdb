@@ -38,7 +38,7 @@ pipeline {
 
             echo "▶️ Triggering Server Api with SPEC_FOLDER = ${folder}"
 
-            def result = build job: 'Server Api',
+            def result = build job: 'serverApi',
               parameters: [string(name: 'SPEC_FOLDER', value: folder)],
               propagate: false,
               wait: true
